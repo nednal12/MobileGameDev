@@ -10,6 +10,10 @@
 		654A891E18EDD49300378456 /* explosion3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 654A891D18EDD49200378456 /* explosion3.mp3 */; };
 		654A8BE618EE0D0A00378456 /* bubbleBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE418EE0D0A00378456 /* bubbleBackground.png */; };
 		654A8BE718EE0D0A00378456 /* bubblePop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE518EE0D0A00378456 /* bubblePop.wav */; };
+		65713A4B18F7096B00727616 /* explosion.png in Resources */ = {isa = PBXBuildFile; fileRef = 65713A4A18F7096B00727616 /* explosion.png */; };
+		65713A4D18F7204700727616 /* ceilingSpikes.png in Resources */ = {isa = PBXBuildFile; fileRef = 65713A4C18F7204700727616 /* ceilingSpikes.png */; };
+		65713A5018F7681A00727616 /* trumpetFanfare.wav in Resources */ = {isa = PBXBuildFile; fileRef = 65713A4E18F7681A00727616 /* trumpetFanfare.wav */; };
+		65713A5118F7681A00727616 /* tubaSadSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 65713A4F18F7681A00727616 /* tubaSadSound.wav */; };
 		6584D0F218ECA6620094936A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6584D0F118ECA6620094936A /* QuartzCore.framework */; };
 		6584D0F418ECA6620094936A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6584D0F318ECA6620094936A /* OpenGLES.framework */; };
 		6584D0F618ECA6620094936A /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6584D0F518ECA6620094936A /* OpenAL.framework */; };
@@ -238,6 +242,10 @@
 		654A891D18EDD49200378456 /* explosion3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion3.mp3; sourceTree = "<group>"; };
 		654A8BE418EE0D0A00378456 /* bubbleBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleBackground.png; sourceTree = "<group>"; };
 		654A8BE518EE0D0A00378456 /* bubblePop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bubblePop.wav; sourceTree = "<group>"; };
+		65713A4A18F7096B00727616 /* explosion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = explosion.png; sourceTree = "<group>"; };
+		65713A4C18F7204700727616 /* ceilingSpikes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ceilingSpikes.png; sourceTree = "<group>"; };
+		65713A4E18F7681A00727616 /* trumpetFanfare.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = trumpetFanfare.wav; sourceTree = "<group>"; };
+		65713A4F18F7681A00727616 /* tubaSadSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tubaSadSound.wav; sourceTree = "<group>"; };
 		6584D0EE18ECA6620094936A /* GameConcept.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameConcept.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6584D0F118ECA6620094936A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6584D0F318ECA6620094936A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -713,6 +721,10 @@
 		654A8BE918EE0EDD00378456 /* HelloWorldAssests */ = {
 			isa = PBXGroup;
 			children = (
+				65713A4E18F7681A00727616 /* trumpetFanfare.wav */,
+				65713A4F18F7681A00727616 /* tubaSadSound.wav */,
+				65713A4C18F7204700727616 /* ceilingSpikes.png */,
+				65713A4A18F7096B00727616 /* explosion.png */,
 				654A8BE518EE0D0A00378456 /* bubblePop.wav */,
 				6584D3C418ED12710094936A /* smallBomb.png */,
 				6584D3C218ED0B170094936A /* smallBubble.png */,
@@ -1670,6 +1682,7 @@
 				6584D32518ECA66C0094936A /* LICENSE_CCBReader.txt in Resources */,
 				6584D11718ECA6620094936A /* Icon@2x.png in Resources */,
 				6584D12918ECA6620094936A /* Icon-Small@2x.png in Resources */,
+				65713A4D18F7204700727616 /* ceilingSpikes.png in Resources */,
 				6584D11B18ECA6620094936A /* Icon-72@2x.png in Resources */,
 				6584D10C18ECA6620094936A /* Original_Default.png in Resources */,
 				6584D11518ECA6620094936A /* Icon.png in Resources */,
@@ -1683,12 +1696,14 @@
 				6584D3C318ED0B170094936A /* smallBubble.png in Resources */,
 				6584D12518ECA6620094936A /* Icon-Small-50.png in Resources */,
 				6584D3AB18ECE11C0094936A /* Default@2x.png in Resources */,
+				65713A4B18F7096B00727616 /* explosion.png in Resources */,
 				6584D30E18ECA66C0094936A /* LICENSE_Kazmath.txt in Resources */,
 				6584D11918ECA6620094936A /* Icon-72.png in Resources */,
 				6584D26718ECA6690094936A /* LICENSE_cocos2d.txt in Resources */,
 				6584D11018ECA6620094936A /* Original_Default-568h@2x.png in Resources */,
 				6584D13018ECA6620094936A /* iTunesArtwork in Resources */,
 				654A8BE718EE0D0A00378456 /* bubblePop.wav in Resources */,
+				65713A5118F7681A00727616 /* tubaSadSound.wav in Resources */,
 				6584D12B18ECA6620094936A /* Icon-Spotlight-iOS7.png in Resources */,
 				6584D3C518ED12710094936A /* smallBomb.png in Resources */,
 				6584D11F18ECA6620094936A /* Icon-76@2x.png in Resources */,
@@ -1697,6 +1712,7 @@
 				6584D12D18ECA6620094936A /* Icon-Spotlight-iOS7@2x.png in Resources */,
 				6584D11D18ECA6620094936A /* Icon-76.png in Resources */,
 				6584D2F318ECA66B0094936A /* ChangeLog in Resources */,
+				65713A5018F7681A00727616 /* trumpetFanfare.wav in Resources */,
 				6584D13218ECA6620094936A /* iTunesArtwork@2x in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,8 @@
 
 #import "HelloWorldScene.h"
 #import "IntroScene.h"
+#import "CCAnimation.h"
+
 
 // -----------------------------------------------------------------------
 #pragma mark - HelloWorldScene
@@ -18,6 +20,7 @@
 {
     int deadBubbles;
     int successfulBubbles;
+    float fontMultiplier;
     CCSprite *bubbleBackgroundImage;
     CCSprite *largeBubble;
     CCSprite *smallBubble;
@@ -25,13 +28,31 @@
     CCSprite *explosion;
     CCSprite *ceilingSpikes;
     CCSprite *ceilingSpikes2;
+    CCSprite *pauseButton;
     ALBuffer *bubblePopSound;
     ALBuffer *explosionSound;
     ALBuffer *trumpetFanfare;
     ALBuffer *tubaSadSound;
     
+    CCLabelTTF *successfulLabel;
+    CCLabelTTF *failureLabel;
+    
+//    CCSpriteFrame *explodeFrame;
+    CCSpriteFrameCache *explodeFrameCache;
+    CCSpriteBatchNode *explodeBatchNode;
+    CCAnimation *explodeAnimation;
+    CCSprite *explodeSprite;
+    CCSprite *feedBack1;
+    CCSprite *feedBack2;
+    
+    CCButton *pauseButton1;
+    
+    CCSpriteFrame *pauseButtonFrame;
+    
     // Declare the physics node that will be used to detect collisions between the bubbles and the bombs
     CCPhysicsNode *physicsNode;
+    
+    NSMutableArray *explodeAnimArray;
 }
 
 // -----------------------------------------------------------------------
@@ -51,6 +72,19 @@
     self = [super init];
     if (!self) return(nil);
     
+    // Set the fontMultiplier so that fonts are sized appropriately regardless of whether they are displayed on a Retina iPhone or iPad
+    CGSize whichSize = [CCDirector sharedDirector].viewSize;
+    NSLog(@"%f", whichSize.width);
+    
+    if (whichSize.width == 1024) {
+        fontMultiplier = 2.0f;
+    } else {
+        fontMultiplier = 1.0f;
+    }
+    
+    // Set the number of times the player is allowed to have a bubble popped by bombs and spikes
+    deadBubbles = 5;
+    
     NSString *physicsNodeTag = [NSString stringWithFormat:@"physicsNodeTag"];
     
     // Preload sounds
@@ -63,7 +97,7 @@
     self.userInteractionEnabled = YES;
     
     // Set the background image
-    bubbleBackgroundImage = [CCSprite spriteWithImageNamed:@"bubbleBackground.png"];
+    bubbleBackgroundImage = [CCSprite spriteWithImageNamed:@"background.png"];
     bubbleBackgroundImage.anchorPoint = CGPointMake(0, 0);
     bubbleBackgroundImage.opacity = 0.90;
     [self addChild:bubbleBackgroundImage];
@@ -110,6 +144,16 @@
     explosion.position = CGPointMake(-explosion.contentSize.height, -explosion.contentSize.width);
     [self addChild:explosion];
     
+    // Initialize the feedBack1 sprite
+    feedBack1 = [CCSprite spriteWithImageNamed:@"feedBack.png"];
+    feedBack1.position = CGPointMake(-feedBack1.contentSize.height, -feedBack1.contentSize.width);
+    [self addChild:feedBack1];
+    
+    // Initialize the feedBack2 sprite
+    feedBack2 = [CCSprite spriteWithImageNamed:@"feedBack.png"];
+    feedBack2.position = CGPointMake(-feedBack2.contentSize.height, -feedBack2.contentSize.width);
+    [self addChild:feedBack2];
+    
     // Initialize the ceilingSpikes sprite
     ceilingSpikes = [CCSprite spriteWithImageNamed:@"ceilingSpikes.png"];
     ceilingSpikes.anchorPoint = CGPointMake(0,0);
@@ -122,6 +166,72 @@
     ceilingSpikes2.position = CGPointMake(0, self.contentSize.height - ceilingSpikes2.contentSize.height);
     [self addChild:ceilingSpikes2];
     
+    // Initialize the pauseButton sprite
+    pauseButtonFrame = [CCSpriteFrame frameWithImageNamed:@"pauseButton.png"];
+    [pauseButton setSpriteFrame:pauseButtonFrame];
+    pauseButton1 = [[CCButton alloc] initWithTitle:@"" spriteFrame:pauseButtonFrame];
+    [pauseButton1 setTarget:self selector:@selector(onPauseButtonClicked:)];
+    pauseButton1.positionType = CCPositionTypeNormalized;
+    pauseButton1.position = ccp(0.95f, 0.95f);
+    [self addChild:pauseButton1];
+    
+    
+    
+    
+    
+    
+//    pauseButton = [CCSprite spriteWithImageNamed:@"pauseButton.png"];
+//    pauseButton.anchorPoint = CGPointMake(0,0);
+//    pauseButton.position = CGPointMake(self.contentSize.width - pauseButton.contentSize.width, self.contentSize.height - pauseButton.contentSize.height);
+//    [self addChild:pauseButton];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    successfulLabel = [CCLabelTTF labelWithString:@"0 / 10" fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+    successfulLabel.positionType = CCPositionTypeNormalized;
+    successfulLabel.color = [CCColor greenColor];
+    successfulLabel.position = ccp(0.85f, 0.95f);
+    [self addChild:successfulLabel];
+    
+    failureLabel = [CCLabelTTF labelWithString:@"5" fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+    failureLabel.positionType = CCPositionTypeNormalized;
+    failureLabel.color = [CCColor redColor];
+    failureLabel.position = ccp(0.10f, 0.95f);
+    [self addChild:failureLabel];
+    
+    
+    // Initialize the explosion batch node and the explosion sprite sheet
+    explodeFrameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+    [explodeFrameCache addSpriteFramesWithFile:@"explode.plist"];
+    
+    explodeSprite = [CCSprite spriteWithImageNamed:@"_0.png"];
+//    explodeSprite.position = ccp(self.contentSize.width / 2, self.contentSize.height / 2);
+    
+    explodeBatchNode = [CCSpriteBatchNode batchNodeWithFile:@"explode.png"];
+    [explodeBatchNode addChild:explodeSprite];
+    [self addChild:explodeBatchNode];
+
+    
+    explodeAnimArray = [NSMutableArray array];
+    for (int i = 0; i < 10; i++) {
+        NSString *individualFrames = [NSString stringWithFormat:@"_%d.png", i];
+        [explodeAnimArray addObject:[explodeFrameCache spriteFrameByName:individualFrames]];
+    }
+    
+//    explodeAnimation = [CCAnimation animationWithSpriteFrames:explodeAnimArray delay:0.1f];
+//    [explodeSprite runAction:[CCActionRepeat actionWithAction:[CCActionAnimate actionWithAnimation:explodeAnimation] times:1]];
+    
+    
+
     // done
 	return self;
 }
@@ -131,6 +241,8 @@
 - (void)dealloc
 {
     // clean up code goes here
+//    [[CCSpriteFrameCache sharedSpriteFrameCache] removeUnusedSpriteFrames];
+    
 }
 
 // -----------------------------------------------------------------------
@@ -181,7 +293,7 @@
         
     } else if (CGRectContainsPoint(largeBubble.boundingBox, tappedSpot)){
         // Decrement the successfulBubbles counter
-        successfulBubbles--;
+//        successfulBubbles--;
         
         largeBubble.physicsBody.collisionGroup = @"enemyGroup";
         largeBubble.physicsBody.collisionType = @"";
@@ -189,12 +301,18 @@
         [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
     } else if (CGRectContainsPoint(smallBubble.boundingBox, tappedSpot)){
         // Decrement the successfulBubbles counter
-        successfulBubbles--;
+//        successfulBubbles--;
         
         smallBubble.physicsBody.collisionGroup = @"enemyGroup";
         smallBubble.physicsBody.collisionType = @"";
         [smallBubble setVisible:NO];
         [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+    } else if (CGRectContainsPoint(pauseButton.boundingBox, tappedSpot)){
+        if ([[CCDirector sharedDirector] isPaused] ) {
+            [[CCDirector sharedDirector] resume];
+        } else {
+            [[CCDirector sharedDirector] pause];
+        }
     }
 
     
@@ -228,79 +346,103 @@
 // floatSmallBubble is called at regular intervals using a scheduler
 -(void)floatSmallBubble:(CCTime)ccTime
 {
-    if (successfulBubbles > 10) {
-        [self endTheGameSuccess];
+    // Reset the collisionGroup, the collisionType and the visibility
+    // This is required if the bubble was hit by a bomb or tapped by the user since these parameters are altered at the time of impact
+    smallBubble.physicsBody.collisionGroup = @"bubbleGroup";
+    smallBubble.physicsBody.collisionType = @"smallBubbleCollision";
+    [smallBubble setVisible:YES];
+    
+    // Calculate a pseudorandom starting point for the bubble to appear at the bottom of the screen
+    int minXAxis = smallBubble.contentSize.width / 2;
+    int maxXAxis = self.contentSize.width - smallBubble.contentSize.width / 2;
+    int spanX = maxXAxis - minXAxis;
+    int spawnX = (arc4random() % spanX) + minXAxis;
+    
+    
+    feedBack1.position = CGPointMake(spawnX, feedBack1.contentSize.height / 2);
+    CCActionDelay *feedBackDuration = [CCActionDelay actionWithDuration:0.25f];
+    CCActionFadeOut *feedBackFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
+    [feedBack1 runAction:[CCActionSequence actionWithArray:@[feedBackDuration,feedBackFadeDuration]]];
+
+    
+    
+    
+    
+    smallBubble.position = CGPointMake(spawnX, -self.contentSize.height + smallBubble.contentSize.height / 2);
+    
+    // Send the bubble floating up the screen from bottom to top
+    CCAction *showSmallBubble = [CCActionMoveTo actionWithDuration:4.0 position:CGPointMake(spawnX, self.contentSize.height + smallBubble.contentSize.height)];
+    [smallBubble runAction:[CCActionSequence actionWithArray:@[showSmallBubble]]];
         
-    } else {
-        // Reset the collisionGroup, the collisionType and the visibility
-        // This is required if the bubble was hit by a bomb or tapped by the user since these parameters are altered at the time of impact
-        smallBubble.physicsBody.collisionGroup = @"bubbleGroup";
-        smallBubble.physicsBody.collisionType = @"smallBubbleCollision";
-        [smallBubble setVisible:YES];
-        
-        // Calculate a pseudorandom starting point for the bubble to appear at the bottom of the screen
-        int minXAxis = smallBubble.contentSize.width / 2;
-        int maxXAxis = self.contentSize.width - smallBubble.contentSize.width / 2;
-        int spanX = maxXAxis - minXAxis;
-        int spawnX = (arc4random() % spanX) + minXAxis;
-        
-        smallBubble.position = CGPointMake(spawnX, -self.contentSize.height + smallBubble.contentSize.height / 2);
-        
-        // Send the bubble floating up the screen from bottom to top
-        CCAction *showSmallBubble = [CCActionMoveTo actionWithDuration:4.0 position:CGPointMake(spawnX, self.contentSize.height + smallBubble.contentSize.height)];
-        [smallBubble runAction:[CCActionSequence actionWithArray:@[showSmallBubble]]];
-        
-        // Increment the successfulBubble counter
-        successfulBubbles++;
-    }
 }
 
 // floatLargeBubble is called at regular intervals using a scheduler
 -(void)floatLargeBubble:(CCTime)ccTime
 {
-    if (successfulBubbles > 10) {
-        [self endTheGameSuccess];
-        
-    } else {
-        // Reset the collisionGroup, the collisionType and the visibility
-        // This is required if the bubble was hit by a bomb or tapped by the user since these parameters are altered at the time of impact
-        largeBubble.physicsBody.collisionGroup = @"bubbleGroup";
-        largeBubble.physicsBody.collisionType = @"largeBubbleCollision";
-        [largeBubble setVisible:YES];
-        
-        // Calculate a pseudorandom starting point for the bubble to appear at the bottom of the screen
-        int minXAxis = largeBubble.contentSize.width / 2;
-        int maxXAxis = self.contentSize.width - largeBubble.contentSize.width / 2;
-        int spanX = maxXAxis - minXAxis;
-        int spawnX = (arc4random() % spanX) + minXAxis;
-        
-        largeBubble.position = CGPointMake(spawnX, -self.contentSize.height + largeBubble.contentSize.height / 2);
-        
-        // Send the bubble floating up the screen from bottom to top
-        CCAction *showLargeBubble = [CCActionMoveTo actionWithDuration:4.0 position:CGPointMake(spawnX, self.contentSize.height + largeBubble.contentSize.height)];
-        [largeBubble runAction:[CCActionSequence actionWithArray:@[showLargeBubble]]];
-        
-        // Increment the successfulBubble counter
-        successfulBubbles++;
-    }
+    // Reset the collisionGroup, the collisionType and the visibility
+    // This is required if the bubble was hit by a bomb or tapped by the user since these parameters are altered at the time of impact
+    largeBubble.physicsBody.collisionGroup = @"bubbleGroup";
+    largeBubble.physicsBody.collisionType = @"largeBubbleCollision";
+    [largeBubble setVisible:YES];
+    
+    // Calculate a pseudorandom starting point for the bubble to appear at the bottom of the screen
+    int minXAxis = largeBubble.contentSize.width / 2;
+    int maxXAxis = self.contentSize.width - largeBubble.contentSize.width / 2;
+    int spanX = maxXAxis - minXAxis;
+    int spawnX = (arc4random() % spanX) + minXAxis;
+    
+    
+    feedBack2.position = CGPointMake(spawnX, feedBack2.contentSize.height / 2);
+    CCActionDelay *feedBackDuration = [CCActionDelay actionWithDuration:0.25f];
+    CCActionFadeOut *feedBackFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
+    [feedBack2 runAction:[CCActionSequence actionWithArray:@[feedBackDuration,feedBackFadeDuration]]];
+    
+    
+    
+    
+    
+    largeBubble.position = CGPointMake(spawnX, -self.contentSize.height + largeBubble.contentSize.height / 2);
+    
+    // Send the bubble floating up the screen from bottom to top
+    CCAction *showLargeBubble = [CCActionMoveTo actionWithDuration:4.0 position:CGPointMake(spawnX, self.contentSize.height + largeBubble.contentSize.height)];
+    [largeBubble runAction:[CCActionSequence actionWithArray:@[showLargeBubble]]];
+
 }
 
 // This method is called whenever a smallBubble and a bomb come into contact
 -(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair smallBubbleCollision:(CCNode *)bubble smallBombCollision:(CCNode *)bomb{
-    // Increment the deadBubbles counter and decrement the successfulBubbles counter
-    deadBubbles++;
-    successfulBubbles--;
+    // Decrement the deadBubbles counter
+    deadBubbles--;
     
     // Show the explosion sprite briefly after the bubble and the bomb make contact
-    explosion.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+    // explosion was the old sprite used before the animated explodeSprite was introduced
+    // Keeping the following lines here just in case I need them again someday
+//    explosion.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+//    CCActionDelay *explosionDuration = [CCActionDelay actionWithDuration:0.25f];
+//    CCActionFadeOut *explosionFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
+//    [explosion runAction:[CCActionSequence actionWithArray:@[explosionDuration,explosionFadeDuration]]];
     
-    CCActionDelay *explosionDuration = [CCActionDelay actionWithDuration:0.25f];
-    CCActionFadeOut *explosionFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
-    [explosion runAction:[CCActionSequence actionWithArray:@[explosionDuration,explosionFadeDuration]]];
-//    [explosion runAction:explosionDuration];
     
-    // Call endTheGameFail if more than five bubbles are popped by bombs or spikes
-    if (deadBubbles > 5) {
+    
+    
+    
+    explodeSprite.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+    explodeAnimation = [CCAnimation animationWithSpriteFrames:explodeAnimArray delay:0.1f];
+    [explodeSprite runAction:[CCActionRepeat actionWithAction:[CCActionAnimate actionWithAnimation:explodeAnimation] times:1]];
+    
+    [self removeChild:failureLabel];
+    failureLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", deadBubbles] fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+    failureLabel.positionType = CCPositionTypeNormalized;
+    failureLabel.color = [CCColor redColor];
+    failureLabel.position = ccp(0.10f, 0.95f);
+    [self addChild:failureLabel];
+
+    
+    
+
+    
+    // Call endTheGameFail if deadBubbles reaches zero
+    if (deadBubbles <= 0) {
         [self endTheGameFail];
     // Otherwise play the explosion sound and set the visibility of the bomb and bubble to invisible
     } else {
@@ -316,20 +458,35 @@
 
 // This method is called whenever a largeBubble and a bomb come into contact
 -(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair largeBubbleCollision:(CCNode *)bubble smallBombCollision:(CCNode *)bomb{
-    // Increment the deadBubbles counter and decrement the successfulBubbles counter
-    deadBubbles++;
-    successfulBubbles--;
+    // Decrement the deadBubbles counter
+    deadBubbles--;
     
     // Show the explosion sprite briefly after the bubble and the bomb make contact
-    explosion.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+    // explosion was the old sprite used before the animated explodeSprite was introduced
+    // Keeping the following lines here just in case I need them again someday
+//    explosion.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+//    CCActionDelay *explosionDuration = [CCActionDelay actionWithDuration:0.25f];
+//    CCActionFadeOut *explosionFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
+//    [explosion runAction:[CCActionSequence actionWithArray:@[explosionDuration,explosionFadeDuration]]];
     
-    CCActionDelay *explosionDuration = [CCActionDelay actionWithDuration:0.25f];
-    CCActionFadeOut *explosionFadeDuration = [CCActionFadeOut actionWithDuration:0.25f];
-    [explosion runAction:[CCActionSequence actionWithArray:@[explosionDuration,explosionFadeDuration]]];
-//    [explosion runAction:explosionDuration];
     
-    // Call endTheGameFail if more than five bubbles are popped by bombs or spikes
-    if (deadBubbles > 5) {
+    
+    
+    explodeSprite.position = CGPointMake(smallBomb.position.x - smallBomb.contentSize.height / 2, smallBomb.position.y - smallBomb.contentSize.width / 2);
+    explodeAnimation = [CCAnimation animationWithSpriteFrames:explodeAnimArray delay:0.1f];
+    [explodeSprite runAction:[CCActionRepeat actionWithAction:[CCActionAnimate actionWithAnimation:explodeAnimation] times:1]];
+    
+    [self removeChild:failureLabel];
+    failureLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", deadBubbles] fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+    failureLabel.positionType = CCPositionTypeNormalized;
+    failureLabel.color = [CCColor redColor];
+    failureLabel.position = ccp(0.10f, 0.95f);
+    [self addChild:failureLabel];
+    
+    
+    
+    // Call endTheGameFail if deadBubbles reaches zero
+    if (deadBubbles <= 0) {
         [self endTheGameFail];
     // Otherwise play the explosion sound and set the visibility of the bomb and bubble to invisible
     } else {
@@ -348,33 +505,83 @@
     // Check to see if the smallBubble came into contact with either set of spikes
     // Make sure it wasn't already hit by a bomb or popped by the player by checking the visible property
     if ((CGRectIntersectsRect(smallBubble.boundingBox, ceilingSpikes.boundingBox) || CGRectIntersectsRect(smallBubble.boundingBox, ceilingSpikes2.boundingBox)) && smallBubble.visible == TRUE) {
-
+        [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         [smallBubble setVisible:NO];
-        // Increment the deadBubbles counter and decrement the successfulBubbles counter
-        deadBubbles++;
-        successfulBubbles--;
+        // Decrement the deadBubbles counter
+        deadBubbles--;
         
-        if (deadBubbles > 5) {
+        [self removeChild:failureLabel];
+        failureLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", deadBubbles] fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+        failureLabel.positionType = CCPositionTypeNormalized;
+        failureLabel.color = [CCColor redColor];
+        failureLabel.position = ccp(0.10f, 0.95f);
+        [self addChild:failureLabel];
+        
+        if (deadBubbles <= 0) {
             [self endTheGameFail];
         }
     
     // Check to see if the largeBubble came into contact with either set of spikes
     // Make sure it wasn't already hit by a bomb or popped by the player by checking the visible property
     } else if ((CGRectIntersectsRect(largeBubble.boundingBox, ceilingSpikes.boundingBox) || CGRectIntersectsRect(largeBubble.boundingBox, ceilingSpikes2.boundingBox)) && largeBubble.visible == TRUE) {
-
+        [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         [largeBubble setVisible:NO];
-        // Increment the deadBubbles counter and decrement the successfulBubbles counter
-        deadBubbles++;
-        successfulBubbles--;
+        // Decrement the deadBubbles counter
+        deadBubbles--;
         
-        if (deadBubbles > 5) {
+        [self removeChild:failureLabel];
+        failureLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", deadBubbles] fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+        failureLabel.positionType = CCPositionTypeNormalized;
+        failureLabel.color = [CCColor redColor];
+        failureLabel.position = ccp(0.10f, 0.95f);
+        [self addChild:failureLabel];
+        
+        if (deadBubbles <= 0) {
             [self endTheGameFail];
         }
+    } else if (largeBubble.position.y > self.contentSize.height && largeBubble.visible == TRUE){
+        [self removeChild:successfulLabel];
+        successfulBubbles++;
+        NSString *tempString = [NSString stringWithFormat:@"%d / 10", successfulBubbles];
+        successfulLabel = [CCLabelTTF labelWithString:tempString fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+        successfulLabel.positionType = CCPositionTypeNormalized;
+        successfulLabel.color = [CCColor greenColor];
+        successfulLabel.position = ccp(0.85f, 0.95f);
+        
+        NSLog(@"This is being called");
+        if (successfulBubbles < 10) {
+            [self addChild:successfulLabel];
+        } else {
+            [self addChild:successfulLabel];
+            [self endTheGameSuccess];
+        }
+        
+        [largeBubble setVisible:NO];
+        
+    } else if (smallBubble.position.y > self.contentSize.height && smallBubble.visible == TRUE){
+        [self removeChild:successfulLabel];
+        successfulBubbles++;
+        NSString *tempString = [NSString stringWithFormat:@"%d / 10", successfulBubbles];
+        successfulLabel = [CCLabelTTF labelWithString:tempString fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
+        successfulLabel.positionType = CCPositionTypeNormalized;
+        successfulLabel.color = [CCColor greenColor];
+        successfulLabel.position = ccp(0.85f, 0.95f);
+        
+        NSLog(@"This is being called");
+        if (successfulBubbles < 10) {
+            [self addChild:successfulLabel];
+        } else {
+            [self addChild:successfulLabel];
+            [self endTheGameSuccess];
+        }
+        
+        [smallBubble setVisible:NO];
     }
+
     
 }
 
-// Called when the player allowed more than five bubbles to get popped by the bombs and spikes
+// Called when the player allowed more than four bubbles to get popped by the bombs and spikes
 -(void)endTheGameFail
 {
     // Play a sorrowful tuba cadence
@@ -390,7 +597,7 @@
     [self unschedule:@selector(bubbleHitSpike:)];
     
     // Introscene button
-    CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Lost ]" fontName:@"Verdana-Bold" fontSize:18.0f];
+    CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Lost ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     youLostButton.positionType = CCPositionTypeNormalized;
     youLostButton.position = ccp(0.5f, 0.35f);
     [youLostButton setTarget:self selector:@selector(onYouLostClicked:)];
@@ -414,7 +621,7 @@
     [self unschedule:@selector(bubbleHitSpike:)];
     
     // Introscene button
-    CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Won ]" fontName:@"Verdana-Bold" fontSize:18.0f];
+    CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Won ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     youLostButton.positionType = CCPositionTypeNormalized;
     youLostButton.position = ccp(0.5f, 0.35f);
     [youLostButton setTarget:self selector:@selector(onYouLostClicked:)];
@@ -430,6 +637,16 @@
     [[CCDirector sharedDirector] replaceScene:[IntroScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionRight duration:1.0f]];
     [[OALSimpleAudio sharedInstance] stopAllEffects];
+}
+
+
+- (void)onPauseButtonClicked:(id)sender
+{
+    if ([[CCDirector sharedDirector] isPaused] ) {
+        [[CCDirector sharedDirector] resume];
+    } else {
+        [[CCDirector sharedDirector] pause];
+    }
 }
 
 // -----------------------------------------------------------------------

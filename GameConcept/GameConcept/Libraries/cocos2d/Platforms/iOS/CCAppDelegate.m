@@ -191,7 +191,12 @@ FindPOTScale(CGFloat size, CGFloat fixedSize)
 	
 	CCDirectorIOS* director = (CCDirectorIOS*) [CCDirector sharedDirector];
 	
-	director.wantsFullScreenLayout = YES;
+//	director.wantsFullScreenLayout = YES;
+    // I commented out the previous line and added the following three in order to get rid of the compiler warning.
+    director.edgesForExtendedLayout = UIRectEdgeAll;
+    director.extendedLayoutIncludesOpaqueBars = NO;
+    director.automaticallyAdjustsScrollViewInsets = YES;
+    
 	
 //#if DEBUG
 	// Display FSP and SPF

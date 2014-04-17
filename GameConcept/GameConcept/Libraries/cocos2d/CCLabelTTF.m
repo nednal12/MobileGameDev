@@ -847,6 +847,7 @@ static __strong NSMutableDictionary* ccLabelTTF_registeredFonts;
         if (dimensions.width > 0)
         {
             dimensions = [string sizeWithFont:font forWidth:dimensions.width lineBreakMode:0];
+            
         }
         else
         {

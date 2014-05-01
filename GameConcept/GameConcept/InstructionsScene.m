@@ -1,5 +1,5 @@
 //
-//  IntroScene.m
+//  InstructionsScene.m
 //  GameConcept
 //
 //  Created by Brent Marohnic on 4/2/14.
@@ -9,15 +9,13 @@
 
 // Import the interfaces
 #import "IntroScene.h"
-#import "HelloWorldScene.h"
-#import "CreditsScene.h"
 #import "InstructionsScene.h"
 
 // -----------------------------------------------------------------------
-#pragma mark - IntroScene
+#pragma mark - InstructionsScene
 // -----------------------------------------------------------------------
 
-@implementation IntroScene
+@implementation InstructionsScene
 {
     CCSprite *bubbleBackgroundImage;
     ALBuffer *bubblePopSound;
@@ -26,7 +24,7 @@
 #pragma mark - Create & Destroy
 // -----------------------------------------------------------------------
 
-+ (IntroScene *)scene
++ (InstructionsScene *)scene
 {
 	return [[self alloc] init];
 }
@@ -64,12 +62,12 @@
     [self addChild:bubbleBackgroundImage];
     
     // Hello world
-    CCLabelTTF *label = [CCLabelTTF labelWithString:@"Bubble Pop" fontName:@"Chalkduster" fontSize:42.0f * fontMultiplier];
+    CCLabelTTF *label = [CCLabelTTF labelWithString:@"Instructions" fontName:@"Chalkduster" fontSize:42.0f * fontMultiplier];
     label.positionType = CCPositionTypeNormalized;
     label.color = [CCColor redColor];
     label.position = ccp(0.5f, 0.85f); // Upper - Middle of screen
     [self addChild:label];
-    /*
+    
     CCLabelTTF *instructions1 = [CCLabelTTF labelWithString:@"Get 10 bubbles to the top" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     instructions1.positionType = CCPositionTypeNormalized;
     instructions1.color = [CCColor redColor];
@@ -81,7 +79,7 @@
     instructions2.color = [CCColor redColor];
     instructions2.position = ccp(0.5f, 0.60f); // Below the game title
     [self addChild:instructions2];
-
+    
     CCLabelTTF *instructions3 = [CCLabelTTF labelWithString:@"the bombs and spikes." fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     instructions3.positionType = CCPositionTypeNormalized;
     instructions3.color = [CCColor redColor];
@@ -100,28 +98,12 @@
     instructions5.position = ccp(0.5f, 0.30f); // Below the game title
     [self addChild:instructions5];
     
-    */
-     
     // Helloworld scene button
-    CCButton *helloWorldButton = [CCButton buttonWithTitle:@"[ Save the Bubbles ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    CCButton *helloWorldButton = [CCButton buttonWithTitle:@"[ Main Menu ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     helloWorldButton.positionType = CCPositionTypeNormalized;
-    helloWorldButton.position = ccp(0.5f, 0.60f);
-    [helloWorldButton setTarget:self selector:@selector(onGameStartClicked:)];
+    helloWorldButton.position = ccp(0.5f, 0.15f);
+    [helloWorldButton setTarget:self selector:@selector(onSpinningClicked:)];
     [self addChild:helloWorldButton];
-
-    // Credits scene button
-    CCButton *creditsButton = [CCButton buttonWithTitle:@"[ Game Credits ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    creditsButton.positionType = CCPositionTypeNormalized;
-    creditsButton.position = ccp(0.5f, 0.45f);
-    [creditsButton setTarget:self selector:@selector(onCreditsClicked:)];
-    [self addChild:creditsButton];
-    
-    // Instructions scene button
-    CCButton *instructionsButton = [CCButton buttonWithTitle:@"[ Instructions ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructionsButton.positionType = CCPositionTypeNormalized;
-    instructionsButton.position = ccp(0.5f, 0.30f);
-    [instructionsButton setTarget:self selector:@selector(onInstructionsClicked:)];
-    [self addChild:instructionsButton];
     
     // done
 	return self;
@@ -131,29 +113,15 @@
 #pragma mark - Button Callbacks
 // -----------------------------------------------------------------------
 
-- (void)onGameStartClicked:(id)sender
+- (void)onSpinningClicked:(id)sender
 {
-    // start game scene with transition
-    [[CCDirector sharedDirector] replaceScene:[HelloWorldScene scene]
-                               withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
-    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
-}
-
-- (void)onCreditsClicked:(id)sender
-{
-    // start credits scene with transition
-    [[CCDirector sharedDirector] replaceScene:[CreditsScene scene]
-                               withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
-    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
-}
-
-- (void)onInstructionsClicked:(id)sender
-{
-    // start instructions scene with transition
-    [[CCDirector sharedDirector] replaceScene:[InstructionsScene scene]
-                               withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
+    // start spinning scene with transition
+    [[CCDirector sharedDirector] replaceScene:[IntroScene scene]
+                               withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionRight duration:1.0f]];
     [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
 }
 
 // -----------------------------------------------------------------------
 @end
+
+

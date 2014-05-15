@@ -240,6 +240,7 @@
 		6584D3C118ED06FC0094936A /* largeBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6584D3C018ED06FB0094936A /* largeBubble.png */; };
 		6584D3C318ED0B170094936A /* smallBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6584D3C218ED0B170094936A /* smallBubble.png */; };
 		6584D3C518ED12710094936A /* smallBomb.png in Resources */ = {isa = PBXBuildFile; fileRef = 6584D3C418ED12710094936A /* smallBomb.png */; };
+		658B5FCA1921011900E2E5A0 /* ImmersiveScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 658B5FC91921011900E2E5A0 /* ImmersiveScene.m */; };
 		65A6CF6F190030CC008B3A94 /* background-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF6E190030CC008B3A94 /* background-ipad.png */; };
 		65A6CF7B19006136008B3A94 /* ceilingSpikes-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF7A19006136008B3A94 /* ceilingSpikes-ipad.png */; };
 		65A6CF7D19006213008B3A94 /* smallBomb-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF7C19006213008B3A94 /* smallBomb-ipad.png */; };
@@ -250,6 +251,12 @@
 		65A6CF8719006FFA008B3A94 /* BubbleDefault-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF8619006FFA008B3A94 /* BubbleDefault-Landscape~ipad.png */; };
 		65A6CF8B19008390008B3A94 /* BubbleDefault@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF8A19008390008B3A94 /* BubbleDefault@2x.png */; };
 		65A6CF9119008DB0008B3A94 /* background-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A6CF9019008DB0008B3A94 /* background-hd.png */; };
+		65F7352E192140D300B9B25B /* ceilingSpikes-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F7352D192140D300B9B25B /* ceilingSpikes-hd.png */; };
+		65F73531192143A300B9B25B /* toolbar-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F7352F192143A300B9B25B /* toolbar-hd.png */; };
+		65F73532192143A300B9B25B /* toolbar-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F73530192143A300B9B25B /* toolbar-ipad.png */; };
+		65F73535192265F200B9B25B /* lightningBolt.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F73533192265F200B9B25B /* lightningBolt.png */; };
+		65F73536192265F200B9B25B /* lightningBolt-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F73534192265F200B9B25B /* lightningBolt-ipad.png */; };
+		65F735381922948A00B9B25B /* lightningBolt-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F735371922948A00B9B25B /* lightningBolt-hd.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -721,6 +728,8 @@
 		6584D3C018ED06FB0094936A /* largeBubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = largeBubble.png; sourceTree = "<group>"; };
 		6584D3C218ED0B170094936A /* smallBubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallBubble.png; sourceTree = "<group>"; };
 		6584D3C418ED12710094936A /* smallBomb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallBomb.png; sourceTree = "<group>"; };
+		658B5FC81921011900E2E5A0 /* ImmersiveScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImmersiveScene.h; sourceTree = "<group>"; };
+		658B5FC91921011900E2E5A0 /* ImmersiveScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImmersiveScene.m; sourceTree = "<group>"; };
 		65A6CF6E190030CC008B3A94 /* background-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-ipad.png"; sourceTree = "<group>"; };
 		65A6CF7A19006136008B3A94 /* ceilingSpikes-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ceilingSpikes-ipad.png"; sourceTree = "<group>"; };
 		65A6CF7C19006213008B3A94 /* smallBomb-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smallBomb-ipad.png"; sourceTree = "<group>"; };
@@ -731,6 +740,12 @@
 		65A6CF8619006FFA008B3A94 /* BubbleDefault-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BubbleDefault-Landscape~ipad.png"; sourceTree = "<group>"; };
 		65A6CF8A19008390008B3A94 /* BubbleDefault@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BubbleDefault@2x.png"; sourceTree = "<group>"; };
 		65A6CF9019008DB0008B3A94 /* background-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-hd.png"; sourceTree = "<group>"; };
+		65F7352D192140D300B9B25B /* ceilingSpikes-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ceilingSpikes-hd.png"; sourceTree = "<group>"; };
+		65F7352F192143A300B9B25B /* toolbar-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-hd.png"; sourceTree = "<group>"; };
+		65F73530192143A300B9B25B /* toolbar-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-ipad.png"; sourceTree = "<group>"; };
+		65F73533192265F200B9B25B /* lightningBolt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lightningBolt.png; sourceTree = "<group>"; };
+		65F73534192265F200B9B25B /* lightningBolt-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lightningBolt-ipad.png"; sourceTree = "<group>"; };
+		65F735371922948A00B9B25B /* lightningBolt-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lightningBolt-hd.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -775,7 +790,10 @@
 			isa = PBXGroup;
 			children = (
 				6523EEE218FEECA100D9866E /* ceilingSpikes.png */,
+				65F7352D192140D300B9B25B /* ceilingSpikes-hd.png */,
 				65A6CF7A19006136008B3A94 /* ceilingSpikes-ipad.png */,
+				65F7352F192143A300B9B25B /* toolbar-hd.png */,
+				65F73530192143A300B9B25B /* toolbar-ipad.png */,
 				6523EEE618FF5F3C00D9866E /* explode.plist */,
 				6523EEE718FF5F3C00D9866E /* explode.png */,
 				6523EEE418FF492D00D9866E /* feedBack.png */,
@@ -783,6 +801,9 @@
 				65713A4E18F7681A00727616 /* trumpetFanfare.wav */,
 				6582ECDA18FC9B48004F4DB6 /* pauseButton.png */,
 				65A6CF8219006545008B3A94 /* pauseButton-ipad.png */,
+				65F73533192265F200B9B25B /* lightningBolt.png */,
+				65F735371922948A00B9B25B /* lightningBolt-hd.png */,
+				65F73534192265F200B9B25B /* lightningBolt-ipad.png */,
 				65713A4F18F7681A00727616 /* tubaSadSound.wav */,
 				65713A4A18F7096B00727616 /* explosion.png */,
 				654A8BE518EE0D0A00378456 /* bubblePop.wav */,
@@ -1674,6 +1695,8 @@
 				6584D39A18ECA66E0094936A /* AppDelegate.m */,
 				6584D39C18ECA66E0094936A /* HelloWorldScene.h */,
 				6584D39D18ECA66E0094936A /* HelloWorldScene.m */,
+				658B5FC81921011900E2E5A0 /* ImmersiveScene.h */,
+				658B5FC91921011900E2E5A0 /* ImmersiveScene.m */,
 				6584D39F18ECA66E0094936A /* IntroScene.h */,
 				6584D3A018ECA66E0094936A /* IntroScene.m */,
 				6567CC1319106B0900BD9643 /* CreditsScene.h */,
@@ -1761,16 +1784,20 @@
 				65A6CF7B19006136008B3A94 /* ceilingSpikes-ipad.png in Resources */,
 				6584D12918ECA6620094936A /* Icon-Small@2x.png in Resources */,
 				6584D11B18ECA6620094936A /* Old_Icon-72@2x.png in Resources */,
+				65F73531192143A300B9B25B /* toolbar-hd.png in Resources */,
 				65A6CF8B19008390008B3A94 /* BubbleDefault@2x.png in Resources */,
 				6584D10C18ECA6620094936A /* Original_Default.png in Resources */,
+				65F73532192143A300B9B25B /* toolbar-ipad.png in Resources */,
 				657A2B211911CBDF00701809 /* Icon-72.png in Resources */,
 				657A2B191911658600701809 /* Default-Landscape~ipad.png in Resources */,
 				6584D11518ECA6620094936A /* Old_Icon.png in Resources */,
 				6584D12318ECA6620094936A /* Icon-iPad-Spotlight-iOS7@2x.png in Resources */,
 				654A891E18EDD49300378456 /* explosion3.mp3 in Resources */,
 				657A2B251911CBDF00701809 /* Icon-120.png in Resources */,
+				65F735381922948A00B9B25B /* lightningBolt-hd.png in Resources */,
 				6584D3B918ECF3C90094936A /* bubbleBackground-hd.png in Resources */,
 				657A2B231911CBDF00701809 /* Icon-76.png in Resources */,
+				65F73535192265F200B9B25B /* lightningBolt.png in Resources */,
 				6584D3B518ECEE740094936A /* Default.png in Resources */,
 				65A6CF9119008DB0008B3A94 /* background-hd.png in Resources */,
 				6584D11218ECA6620094936A /* Original_Default-Landscape~ipad.png in Resources */,
@@ -1778,6 +1805,7 @@
 				6584D12718ECA6620094936A /* Icon-Small.png in Resources */,
 				6584D3C318ED0B170094936A /* smallBubble.png in Resources */,
 				65A6CF8519006D96008B3A94 /* feedback-ipad.png in Resources */,
+				65F73536192265F200B9B25B /* lightningBolt-ipad.png in Resources */,
 				6584D12518ECA6620094936A /* Icon-Small-50.png in Resources */,
 				6582ECDB18FC9B48004F4DB6 /* pauseButton.png in Resources */,
 				65713A4B18F7096B00727616 /* explosion.png in Resources */,
@@ -1806,6 +1834,7 @@
 				65A6CF8719006FFA008B3A94 /* BubbleDefault-Landscape~ipad.png in Resources */,
 				6584D39318ECA66E0094936A /* LICENSE_Chipmunk.txt in Resources */,
 				6523EEE518FF492D00D9866E /* feedBack.png in Resources */,
+				65F7352E192140D300B9B25B /* ceilingSpikes-hd.png in Resources */,
 				6584D12D18ECA6620094936A /* Icon-Spotlight-iOS7@2x.png in Resources */,
 				6584D11D18ECA6620094936A /* Old_Icon-76.png in Resources */,
 				6584D2F318ECA66B0094936A /* ChangeLog in Resources */,
@@ -1842,6 +1871,7 @@
 				6584D18618ECA6640094936A /* CCNodeColor.m in Sources */,
 				6584D25F18ECA6680094936A /* TransformUtils.m in Sources */,
 				6584D20018ECA6670094936A /* CCTextureCache.m in Sources */,
+				658B5FCA1921011900E2E5A0 /* ImmersiveScene.m in Sources */,
 				6584D22B18ECA6670094936A /* CCAppDelegate.m in Sources */,
 				6584D22F18ECA6680094936A /* CCDirectorMac.m in Sources */,
 				6584D16318ECA6630094936A /* ccDeprecated.m in Sources */,

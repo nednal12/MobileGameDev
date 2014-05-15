@@ -9,6 +9,7 @@
 
 // Import the interfaces
 #import "IntroScene.h"
+#import "ImmersiveScene.h"
 #import "HelloWorldScene.h"
 #import "CreditsScene.h"
 #import "InstructionsScene.h"
@@ -134,7 +135,7 @@
 - (void)onGameStartClicked:(id)sender
 {
     // start game scene with transition
-    [[CCDirector sharedDirector] replaceScene:[HelloWorldScene scene]
+    [[CCDirector sharedDirector] replaceScene:[ImmersiveScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
     [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
 }

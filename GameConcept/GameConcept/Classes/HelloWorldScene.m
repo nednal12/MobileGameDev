@@ -9,6 +9,7 @@
 
 #import "HelloWorldScene.h"
 #import "IntroScene.h"
+#import "ImmersiveScene.h"
 #import "CCAnimation.h"
 
 
@@ -28,6 +29,7 @@
     CCSprite *explosion;
     CCSprite *ceilingSpikes;
     CCSprite *ceilingSpikes2;
+    CCSprite *toolbar;
     CCSprite *pauseButton;
     ALBuffer *bubblePopSound;
     ALBuffer *explosionSound;
@@ -166,14 +168,20 @@
     ceilingSpikes2.position = CGPointMake(0, self.contentSize.height - ceilingSpikes2.contentSize.height);
     [self addChild:ceilingSpikes2];
     
+    // Initialize the toolbar sprite
+    toolbar = [CCSprite spriteWithImageNamed:@"toolbar.png"];
+    toolbar.anchorPoint = CGPointMake(0,0);
+    toolbar.position = CGPointMake(0, self.contentSize.height - toolbar.contentSize.height);
+    [self addChild:toolbar z:1];
+    
     // Initialize the pauseButton sprite
     pauseButtonFrame = [CCSpriteFrame frameWithImageNamed:@"pauseButton.png"];
     [pauseButton setSpriteFrame:pauseButtonFrame];
     pauseButton1 = [[CCButton alloc] initWithTitle:@"" spriteFrame:pauseButtonFrame];
     [pauseButton1 setTarget:self selector:@selector(onPauseButtonClicked:)];
     pauseButton1.positionType = CCPositionTypeNormalized;
-    pauseButton1.position = ccp(0.95f, 0.95f);
-    [self addChild:pauseButton1];
+    pauseButton1.position = ccp(0.95f, 0.96f);
+    [self addChild:pauseButton1 z:2];
     
     
     
@@ -200,13 +208,13 @@
     successfulLabel.positionType = CCPositionTypeNormalized;
     successfulLabel.color = [CCColor greenColor];
     successfulLabel.position = ccp(0.85f, 0.95f);
-    [self addChild:successfulLabel];
+    [self addChild:successfulLabel z:2];
     
     failureLabel = [CCLabelTTF labelWithString:@"5" fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
     failureLabel.positionType = CCPositionTypeNormalized;
     failureLabel.color = [CCColor redColor];
     failureLabel.position = ccp(0.10f, 0.95f);
-    [self addChild:failureLabel];
+    [self addChild:failureLabel z:2];
     
     
     // Initialize the explosion batch node and the explosion sprite sheet
@@ -435,7 +443,7 @@
     failureLabel.positionType = CCPositionTypeNormalized;
     failureLabel.color = [CCColor redColor];
     failureLabel.position = ccp(0.10f, 0.95f);
-    [self addChild:failureLabel];
+    [self addChild:failureLabel z:2];
 
     
     
@@ -481,7 +489,7 @@
     failureLabel.positionType = CCPositionTypeNormalized;
     failureLabel.color = [CCColor redColor];
     failureLabel.position = ccp(0.10f, 0.95f);
-    [self addChild:failureLabel];
+    [self addChild:failureLabel z:2];
     
     
     
@@ -515,7 +523,7 @@
         failureLabel.positionType = CCPositionTypeNormalized;
         failureLabel.color = [CCColor redColor];
         failureLabel.position = ccp(0.10f, 0.95f);
-        [self addChild:failureLabel];
+        [self addChild:failureLabel z:2];
         
         if (deadBubbles <= 0) {
             [self endTheGameFail];
@@ -534,7 +542,7 @@
         failureLabel.positionType = CCPositionTypeNormalized;
         failureLabel.color = [CCColor redColor];
         failureLabel.position = ccp(0.10f, 0.95f);
-        [self addChild:failureLabel];
+        [self addChild:failureLabel z:2];
         
         if (deadBubbles <= 0) {
             [self endTheGameFail];
@@ -550,9 +558,9 @@
         
         NSLog(@"This is being called");
         if (successfulBubbles < 10) {
-            [self addChild:successfulLabel];
+            [self addChild:successfulLabel z:2];
         } else {
-            [self addChild:successfulLabel];
+            [self addChild:successfulLabel z:2];
             [self endTheGameSuccess];
         }
         
@@ -569,9 +577,9 @@
         
         NSLog(@"This is being called");
         if (successfulBubbles < 10) {
-            [self addChild:successfulLabel];
+            [self addChild:successfulLabel z:2];
         } else {
-            [self addChild:successfulLabel];
+            [self addChild:successfulLabel z:2];
             [self endTheGameSuccess];
         }
         
@@ -621,11 +629,11 @@
     [self unschedule:@selector(bubbleHitSpike:)];
     
     // Introscene button
-    CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Won ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    youLostButton.positionType = CCPositionTypeNormalized;
-    youLostButton.position = ccp(0.5f, 0.35f);
-    [youLostButton setTarget:self selector:@selector(onYouLostClicked:)];
-    [self addChild:youLostButton];
+    CCButton *youWonButton = [CCButton buttonWithTitle:@"[ You Won ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    youWonButton.positionType = CCPositionTypeNormalized;
+    youWonButton.position = ccp(0.5f, 0.35f);
+    [youWonButton setTarget:self selector:@selector(onYouWonClicked:)];
+    [self addChild:youWonButton];
 }
 // -----------------------------------------------------------------------
 #pragma mark - Button Callbacks
@@ -635,6 +643,15 @@
 {
     // Go back to the intro scene
     [[CCDirector sharedDirector] replaceScene:[IntroScene scene]
+                               withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionRight duration:1.0f]];
+    [[OALSimpleAudio sharedInstance] stopAllEffects];
+}
+
+
+- (void)onYouWonClicked:(id)sender
+{
+    // Go back to the intro scene
+    [[CCDirector sharedDirector] replaceScene:[ImmersiveScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionRight duration:1.0f]];
     [[OALSimpleAudio sharedInstance] stopAllEffects];
 }

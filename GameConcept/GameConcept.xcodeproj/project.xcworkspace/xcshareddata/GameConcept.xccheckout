@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>BA801190-AFF8-4631-9C86-10D4988CB151</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GameConcept</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>54BC8F1E-4521-4D2D-A7F6-F40700ACFD07</key>
+		<string>https://github.com/nednal12/MobileGameDev.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>GameConcept/GameConcept.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>54BC8F1E-4521-4D2D-A7F6-F40700ACFD07</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/nednal12/MobileGameDev.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>54BC8F1E-4521-4D2D-A7F6-F40700ACFD07</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>54BC8F1E-4521-4D2D-A7F6-F40700ACFD07</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MobileGameDev</string>
+		</dict>
+	</array>
+</dict>
+</plist>

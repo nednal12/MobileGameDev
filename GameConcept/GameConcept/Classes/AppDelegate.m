@@ -10,8 +10,9 @@
 #import "AppDelegate.h"
 #import "IntroScene.h"
 #import "HelloWorldScene.h"
+#import <Parse/Parse.h>
 
-@implementation AppDelegate
+@implementation AppDelegate 
 
 // 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -19,12 +20,21 @@
 	// This is the only app delegate method you need to implement when inheriting from CCAppDelegate.
 	// This method is a good place to add one time setup code that only runs when your app is first launched.
 	
+    
+    // Originally attempted to place this code below the setupCocos2dWithOptions call but that caused an uncaught exception error.
+    // Placing it here finally got it to work.
+    [Parse setApplicationId:@"kvlq1NUrtC8trhKmTlgHzAvXKuM6KjaeEW9gyeRD"
+                  clientKey:@"p1OORXaJpkqBU4uLOGoYBztbUHan9ZFlSifC60nr"];
+    
+    
 	// Setup Cocos2D with reasonable defaults for everything.
 	// There are a number of simple options you can change.
 	// If you want more flexibility, you can configure Cocos2D yourself instead of calling setupCocos2dWithOptions:.
 	[self setupCocos2dWithOptions:@{
 		// Show the FPS and draw call label.
 		CCSetupShowDebugStats: @(NO),
+        
+        
 		
 		// More examples of options you might want to fiddle with:
 		// (See CCAppDelegate.h for more information)
@@ -42,6 +52,8 @@
 		// Make iPad's act like they run at a 2x content scale. (iPad retina 4x)
 //		CCSetupTabletScale2X: @(YES),
 	}];
+    
+    
 	
 	return YES;
 }

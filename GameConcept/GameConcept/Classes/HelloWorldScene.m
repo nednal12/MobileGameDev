@@ -30,7 +30,7 @@
     CCSprite *ceilingSpikes;
     CCSprite *ceilingSpikes2;
     CCSprite *toolbar;
-    CCSprite *pauseButton;
+    
     ALBuffer *bubblePopSound;
     ALBuffer *explosionSound;
     ALBuffer *trumpetFanfare;
@@ -47,8 +47,8 @@
     CCSprite *feedBack1;
     CCSprite *feedBack2;
     
+    CCSprite *pauseButton;
     CCButton *pauseButton1;
-    
     CCSpriteFrame *pauseButtonFrame;
     
     // Declare the physics node that will be used to detect collisions between the bubbles and the bombs

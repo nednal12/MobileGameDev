@@ -11,6 +11,10 @@
 #import "HelloWorldScene.h"
 #import "IntroScene.h"
 #import "CCAnimation.h"
+#import "PlayerSingleton.h"
+#import "LeaderBoardDB.h"
+#import <Parse/Parse.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 
 
@@ -66,6 +70,8 @@
     
     CCAction *showSmallBubble;
     CCAction *showLargeBubble;
+    
+    int successBubbleLimit;
 }
 
 // -----------------------------------------------------------------------
@@ -84,6 +90,8 @@
     // Apple recommends assigning self with supers return value
     self = [super init];
     if (!self) return(nil);
+    
+    successBubbleLimit = 2;
     
     // Set the fontMultiplier so that fonts are sized appropriately regardless of whether they are displayed on a Retina iPhone or iPad
     CGSize whichSize = [CCDirector sharedDirector].viewSize;
@@ -490,10 +498,13 @@
     failureLabel.position = ccp(0.10f, 0.95f);
     [self addChild:failureLabel z:2];
     
-    // Call endTheGameFail if deadBubbles reaches zero
-    if (deadBubbles <= 0) {
+    // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than 10
+
+    if (deadBubbles <= 0 && successfulBubbles < successBubbleLimit) {
         [self endTheGameFail];
         // Otherwise play the explosion sound and set the visibility of the bomb and bubble to invisible
+    } else if (deadBubbles <= 0 && successfulBubbles >= successBubbleLimit){
+        [self endTheGameSuccess];
     } else {
         [[OALSimpleAudio sharedInstance] playBuffer:explosionSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         smallBomb.physicsBody.collisionType = @"";
@@ -534,10 +545,13 @@
     failureLabel.position = ccp(0.10f, 0.95f);
     [self addChild:failureLabel z:2];
     
-    // Call endTheGameFail if deadBubbles reaches zero
-    if (deadBubbles <= 0) {
+    // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than 10
+
+    if (deadBubbles <= 0 && successfulBubbles < successBubbleLimit) {
         [self endTheGameFail];
         // Otherwise play the explosion sound and set the visibility of the bomb and bubble to invisible
+    } else if(deadBubbles <= 0 && successfulBubbles >= successBubbleLimit){
+        [self endTheGameSuccess];
     } else {
         [[OALSimpleAudio sharedInstance] playBuffer:explosionSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         smallBomb.physicsBody.collisionType = @"";
@@ -567,8 +581,13 @@
         failureLabel.position = ccp(0.10f, 0.95f);
         [self addChild:failureLabel z:2];
         
-        if (deadBubbles <= 0) {
+        
+        // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than 10
+
+        if (deadBubbles <= 0 && successfulBubbles < successBubbleLimit) {
             [self endTheGameFail];
+        } else if (deadBubbles <= 0 && successfulBubbles >= successBubbleLimit){
+            [self endTheGameSuccess];
         }
         
         // Check to see if the largeBubble came into contact with either set of spikes
@@ -586,8 +605,13 @@
         failureLabel.position = ccp(0.10f, 0.95f);
         [self addChild:failureLabel z:2];
         
-        if (deadBubbles <= 0) {
+        
+        // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than 10
+
+        if (deadBubbles <= 0 && successfulBubbles < successBubbleLimit) {
             [self endTheGameFail];
+        } else if (deadBubbles <= 0 && successfulBubbles >= successBubbleLimit){
+            [self endTheGameSuccess];
         }
     } else if (largeBubble.position.y > self.contentSize.height && largeBubble.visible == TRUE){
         [self removeChild:successfulLabel];
@@ -598,11 +622,11 @@
         successfulLabel.color = [CCColor greenColor];
         successfulLabel.position = ccp(0.85f, 0.95f);
         
-        if (successfulBubbles < 10) {
+        if (successfulBubbles < successBubbleLimit) {
             [self addChild:successfulLabel z:2];
         } else {
             [self addChild:successfulLabel z:2];
-            [self endTheGameSuccess];
+//            [self endTheGameSuccess];
         }
         
         [largeBubble setVisible:NO];
@@ -616,11 +640,11 @@
         successfulLabel.color = [CCColor greenColor];
         successfulLabel.position = ccp(0.85f, 0.95f);
         
-        if (successfulBubbles < 10) {
+        if (successfulBubbles < successBubbleLimit) {
             [self addChild:successfulLabel z:2];
         } else {
             [self addChild:successfulLabel z:2];
-            [self endTheGameSuccess];
+//            [self endTheGameSuccess];
         }
         
         [smallBubble setVisible:NO];
@@ -645,7 +669,7 @@
     }
 }
 
-// Called when the player allowed more than four bubbles to get popped by the bombs and spikes
+// Called when the player allowed more than four bubbles to get popped by the bombs and spikes before getting at least 10 bubbles to the top
 -(void)endTheGameFail
 {
     // Play a sorrowful tuba cadence
@@ -689,6 +713,35 @@
     [self unschedule:@selector(moveSpikes:)];
     [self unschedule:@selector(moveSpikes2:)];
     [self unschedule:@selector(showPowerUp:)];
+    
+    // Send the score to PlayerSingleton
+    PlayerSingleton *playerSingleton = [PlayerSingleton GetInstance];
+    playerSingleton.playerScore = successfulBubbles;
+    
+    // secondsFromGMT actually returns an NSInteger but iOS does mind it too much if the value is placed in a double
+    // The reason for doing that is so the offset can be used as the input to the NSDate method dateByAddingTimeInterval
+    // Doing this actually returns the correct time for the user specific locale
+    NSTimeZone *timeZone = [NSTimeZone localTimeZone];
+    double offset = timeZone.secondsFromGMT;
+    NSDate *now = [[NSDate date] dateByAddingTimeInterval: offset];
+    
+    
+    double tempDouble = [now timeIntervalSinceReferenceDate];
+    playerSingleton.playerDate = tempDouble;
+    NSDate *convertedDate = [NSDate dateWithTimeIntervalSinceReferenceDate:tempDouble];
+    
+    NSLog(@"Converted Date is: %@", convertedDate);
+    
+    
+    LeaderBoardDB *leaderBoardDB = [LeaderBoardDB GetInstance];
+    [leaderBoardDB insertNewScore];
+    
+    PFObject *leaderBoardData = [PFObject objectWithClassName:@"LeaderBoardData"];
+    leaderBoardData[@"userName"] = playerSingleton.playerName;
+    leaderBoardData[@"score"] = [NSNumber numberWithInt:successfulBubbles];
+    leaderBoardData[@"gameDate"] = convertedDate;
+    [leaderBoardData saveInBackground];
+    
     
     // Introscene button
     CCButton *youLostButton = [CCButton buttonWithTitle:@"[ You Won ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];

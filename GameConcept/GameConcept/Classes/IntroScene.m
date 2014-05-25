@@ -13,6 +13,11 @@
 #import "HelloWorldScene.h"
 #import "CreditsScene.h"
 #import "InstructionsScene.h"
+#import "InternalLeaderboard.h"
+#import "LeaderBoardViewController.h"
+#import "PlayerSingleton.h"
+#import "LeaderBoardDB.h"
+#import "PublishedViewController.h"
 
 // -----------------------------------------------------------------------
 #pragma mark - IntroScene
@@ -22,6 +27,9 @@
 {
     CCSprite *bubbleBackgroundImage;
     ALBuffer *bubblePopSound;
+//    CCSprite *userNameTextField;
+//    CCTextField *userNameTextField1;
+//    CCSpriteFrame *userNameSpriteFrame;
 }
 // -----------------------------------------------------------------------
 #pragma mark - Create & Destroy
@@ -40,6 +48,17 @@
     // Apple recommend assigning self with supers return value
     self = [super init];
     if (!self) return(nil);
+    
+    [PlayerSingleton CreateInstance];
+    [LeaderBoardDB CreateInstance];
+    
+    
+    // This is the initial code copied from Parse in order to test the connection.
+    // Keeping it here just in case it is needed again.
+//    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
+//    testObject[@"foo"] = @"bar";
+//    [testObject saveInBackground];
+    
     
     // Set the fontMultiplier so that fonts are sized appropriately regardless of whether they are displayed on a Retina iPhone or iPad
     CGSize whichSize = [CCDirector sharedDirector].viewSize;
@@ -64,67 +83,75 @@
     bubbleBackgroundImage.anchorPoint = CGPointMake(0, 0);
     [self addChild:bubbleBackgroundImage];
     
+//    CCSprite *userNameSprite = [CCSprite spriteWithImageNamed:@"userNameTextField.png"];
+//    CCTextField *userNameTextField = [CCTextField textFieldWithSpriteFrame:[CCSpriteFrame frameWithImageNamed:@"userNameTextField.png"]];
+//    userNameTextField.fontSize = 16.0f;
+//    userNameTextField.contentSize = CGSizeMake(180.0f, 30.0f);
+//    userNameTextField.preferredSize = userNameSprite.contentSize;
+//    userNameTextField.positionType = CCPositionTypeNormalized;
+//    userNameTextField.position = ccp(0.38f, 0.7f);
+//    [self addChild:userNameTextField];
+//    NSLog(@"%@", userNameTextField.textField.description);
+    
+    
     // Hello world
     CCLabelTTF *label = [CCLabelTTF labelWithString:@"Bubble Pop" fontName:@"Chalkduster" fontSize:42.0f * fontMultiplier];
     label.positionType = CCPositionTypeNormalized;
     label.color = [CCColor redColor];
-    label.position = ccp(0.5f, 0.85f); // Upper - Middle of screen
+    label.position = ccp(0.5f, 0.90f); // Upper - Middle of screen
     [self addChild:label];
-    /*
-    CCLabelTTF *instructions1 = [CCLabelTTF labelWithString:@"Get 10 bubbles to the top" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructions1.positionType = CCPositionTypeNormalized;
-    instructions1.color = [CCColor redColor];
-    instructions1.position = ccp(0.5f, 0.70f); // Below the game title
-    [self addChild:instructions1];
-    
-    CCLabelTTF *instructions2 = [CCLabelTTF labelWithString:@"before 5 bubbles are popped by" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructions2.positionType = CCPositionTypeNormalized;
-    instructions2.color = [CCColor redColor];
-    instructions2.position = ccp(0.5f, 0.60f); // Below the game title
-    [self addChild:instructions2];
 
-    CCLabelTTF *instructions3 = [CCLabelTTF labelWithString:@"the bombs and spikes." fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructions3.positionType = CCPositionTypeNormalized;
-    instructions3.color = [CCColor redColor];
-    instructions3.position = ccp(0.5f, 0.50f); // Below the game title
-    [self addChild:instructions3];
+    userNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(142, 65, 200, 30)];
+    [userNameTextField setDelegate:self];
+    [userNameTextField setText:@""];
+    [[[CCDirector sharedDirector] view] addSubview:userNameTextField];
     
-    CCLabelTTF *instructions4 = [CCLabelTTF labelWithString:@"You may pop the bubbles without penalty" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructions4.positionType = CCPositionTypeNormalized;
-    instructions4.color = [CCColor redColor];
-    instructions4.position = ccp(0.5f, 0.40f); // Below the game title
-    [self addChild:instructions4];
+    [userNameTextField becomeFirstResponder];
+    userNameTextField.returnKeyType = UIReturnKeyDone;
+    userNameTextField.placeholder = @"Enter User Name";
+    userNameTextField.borderStyle = UITextBorderStyleRoundedRect;
     
-    CCLabelTTF *instructions5 = [CCLabelTTF labelWithString:@"in order to save them from being popped." fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
-    instructions5.positionType = CCPositionTypeNormalized;
-    instructions5.color = [CCColor redColor];
-    instructions5.position = ccp(0.5f, 0.30f); // Below the game title
-    [self addChild:instructions5];
     
-    */
-     
+    
     // Helloworld scene button
     CCButton *helloWorldButton = [CCButton buttonWithTitle:@"[ Save the Bubbles ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     helloWorldButton.positionType = CCPositionTypeNormalized;
-    helloWorldButton.position = ccp(0.5f, 0.60f);
+    helloWorldButton.position = ccp(0.5f, 0.65f);
     [helloWorldButton setTarget:self selector:@selector(onGameStartClicked:)];
     [self addChild:helloWorldButton];
 
     // Credits scene button
     CCButton *creditsButton = [CCButton buttonWithTitle:@"[ Game Credits ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     creditsButton.positionType = CCPositionTypeNormalized;
-    creditsButton.position = ccp(0.5f, 0.45f);
+    creditsButton.position = ccp(0.5f, 0.53f);
     [creditsButton setTarget:self selector:@selector(onCreditsClicked:)];
     [self addChild:creditsButton];
     
     // Instructions scene button
     CCButton *instructionsButton = [CCButton buttonWithTitle:@"[ Instructions ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     instructionsButton.positionType = CCPositionTypeNormalized;
-    instructionsButton.position = ccp(0.5f, 0.30f);
+    instructionsButton.position = ccp(0.5f, 0.41f);
     [instructionsButton setTarget:self selector:@selector(onInstructionsClicked:)];
     [self addChild:instructionsButton];
     
+    // Internal Leader Board scene button
+    CCButton *internalLeaderBoardButton = [CCButton buttonWithTitle:@"[ Internal Leaderboard  ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    internalLeaderBoardButton.positionType = CCPositionTypeNormalized;
+    internalLeaderBoardButton.position = ccp(0.5f, 0.29f);
+    [internalLeaderBoardButton setTarget:self selector:@selector(onInternalLeaderBoardClicked:)];
+    [self addChild:internalLeaderBoardButton];
+    
+    // Internal Leader Board scene button
+    CCButton *publishedLeaderBoardButton = [CCButton buttonWithTitle:@"[ Published Leaderboard  ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    publishedLeaderBoardButton.positionType = CCPositionTypeNormalized;
+    publishedLeaderBoardButton.position = ccp(0.5f, 0.17f);
+    [publishedLeaderBoardButton setTarget:self selector:@selector(onPublishedLeaderBoardClicked:)];
+    [self addChild:publishedLeaderBoardButton];
+
+    
     // done
+    
+    
 	return self;
 }
 
@@ -134,6 +161,8 @@
 
 - (void)onGameStartClicked:(id)sender
 {
+    userNameTextField.hidden = YES;
+    
     // start game scene with transition
     [[CCDirector sharedDirector] replaceScene:[ImmersiveScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
@@ -142,6 +171,7 @@
 
 - (void)onCreditsClicked:(id)sender
 {
+    userNameTextField.hidden = YES;
     // start credits scene with transition
     [[CCDirector sharedDirector] replaceScene:[CreditsScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
@@ -150,11 +180,61 @@
 
 - (void)onInstructionsClicked:(id)sender
 {
+    userNameTextField.hidden = YES;
     // start instructions scene with transition
     [[CCDirector sharedDirector] replaceScene:[InstructionsScene scene]
                                withTransition:[CCTransition transitionPushWithDirection:CCTransitionDirectionLeft duration:1.0f]];
     [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
 }
+
+- (void)onInternalLeaderBoardClicked:(id)sender
+{
+//    userNameTextField.hidden = YES;
+    
+    // start Internal Leaderboard scene with transition
+    LeaderBoardViewController *leaderBoardViewController = [[LeaderBoardViewController alloc] init];
+    [[CCDirector sharedDirector] presentViewController:leaderBoardViewController animated:YES completion:nil];
+
+    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+}
+
+- (void)onPublishedLeaderBoardClicked:(id)sender
+{
+    //    userNameTextField.hidden = YES;
+    
+    // start Internal Leaderboard scene with transition
+    PublishedViewController *publishedViewController = [[PublishedViewController alloc] init];
+    [[CCDirector sharedDirector] presentViewController:publishedViewController animated:YES completion:nil];
+    
+    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+}
+
+
+// -----------------------------------------------------------------------
+#pragma mark - UITextField Methods
+// -----------------------------------------------------------------------
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ([textField.text isEqualToString:@""])
+    {
+        return NO;
+    }
+    else
+    {
+        PlayerSingleton *playerSingleton = [PlayerSingleton GetInstance];
+        playerSingleton.playerName = textField.text;
+    }
+    
+    return YES;
+}
+
 
 // -----------------------------------------------------------------------
 @end

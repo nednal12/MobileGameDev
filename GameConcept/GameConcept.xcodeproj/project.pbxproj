@@ -11,6 +11,10 @@
 		6523EEE518FF492D00D9866E /* feedBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 6523EEE418FF492D00D9866E /* feedBack.png */; };
 		6523EEE818FF5F3C00D9866E /* explode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6523EEE618FF5F3C00D9866E /* explode.plist */; };
 		6523EEE918FF5F3C00D9866E /* explode.png in Resources */ = {isa = PBXBuildFile; fileRef = 6523EEE718FF5F3C00D9866E /* explode.png */; };
+		6548FB091935264B00ADA44E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6548FB071935264B00ADA44E /* LoginViewController.m */; };
+		6548FB0A1935264B00ADA44E /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6548FB081935264B00ADA44E /* LoginViewController.xib */; };
+		6548FB0E1935360D00ADA44E /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6548FB0C1935360D00ADA44E /* SignupViewController.m */; };
+		6548FB0F1935360D00ADA44E /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6548FB0D1935360D00ADA44E /* SignupViewController.xib */; };
 		654A891E18EDD49300378456 /* explosion3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 654A891D18EDD49200378456 /* explosion3.mp3 */; };
 		654A8BE618EE0D0A00378456 /* bubbleBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE418EE0D0A00378456 /* bubbleBackground.png */; };
 		654A8BE718EE0D0A00378456 /* bubblePop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE518EE0D0A00378456 /* bubblePop.wav */; };
@@ -293,6 +297,12 @@
 		6523EEE418FF492D00D9866E /* feedBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feedBack.png; sourceTree = "<group>"; };
 		6523EEE618FF5F3C00D9866E /* explode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = explode.plist; sourceTree = "<group>"; };
 		6523EEE718FF5F3C00D9866E /* explode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = explode.png; sourceTree = "<group>"; };
+		6548FB061935264B00ADA44E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		6548FB071935264B00ADA44E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		6548FB081935264B00ADA44E /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		6548FB0B1935360D00ADA44E /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupViewController.h; sourceTree = "<group>"; };
+		6548FB0C1935360D00ADA44E /* SignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupViewController.m; sourceTree = "<group>"; };
+		6548FB0D1935360D00ADA44E /* SignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignupViewController.xib; sourceTree = "<group>"; };
 		654A891D18EDD49200378456 /* explosion3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion3.mp3; sourceTree = "<group>"; };
 		654A8BE418EE0D0A00378456 /* bubbleBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleBackground.png; sourceTree = "<group>"; };
 		654A8BE518EE0D0A00378456 /* bubblePop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bubblePop.wav; sourceTree = "<group>"; };
@@ -1781,6 +1791,12 @@
 				65818D3919313766007BC807 /* PublishedViewController.h */,
 				65818D3A19313767007BC807 /* PublishedViewController.m */,
 				65818D3B19313767007BC807 /* PublishedViewController.xib */,
+				6548FB061935264B00ADA44E /* LoginViewController.h */,
+				6548FB071935264B00ADA44E /* LoginViewController.m */,
+				6548FB081935264B00ADA44E /* LoginViewController.xib */,
+				6548FB0B1935360D00ADA44E /* SignupViewController.h */,
+				6548FB0C1935360D00ADA44E /* SignupViewController.m */,
+				6548FB0D1935360D00ADA44E /* SignupViewController.xib */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1893,6 +1909,7 @@
 				6584D30E18ECA66C0094936A /* LICENSE_Kazmath.txt in Resources */,
 				6584D11918ECA6620094936A /* Old_Icon-72.png in Resources */,
 				657A2B17191162A700701809 /* Default@2x.png in Resources */,
+				6548FB0A1935264B00ADA44E /* LoginViewController.xib in Resources */,
 				6584D26718ECA6690094936A /* LICENSE_cocos2d.txt in Resources */,
 				6584D11018ECA6620094936A /* Original_Default-568h@2x.png in Resources */,
 				657A2B221911CBDF00701809 /* Icon-72@2x.png in Resources */,
@@ -1910,6 +1927,7 @@
 				65A6CF7D19006213008B3A94 /* smallBomb-ipad.png in Resources */,
 				6523EEE318FEECA100D9866E /* ceilingSpikes.png in Resources */,
 				6584D3C118ED06FC0094936A /* largeBubble.png in Resources */,
+				6548FB0F1935360D00ADA44E /* SignupViewController.xib in Resources */,
 				657A2B271911CBDF00701809 /* Icon@2x.png in Resources */,
 				65A6CF81190063DF008B3A94 /* smallBubble-ipad.png in Resources */,
 				65A6CF8719006FFA008B3A94 /* BubbleDefault-Landscape~ipad.png in Resources */,
@@ -1943,6 +1961,7 @@
 				6584D2A618ECA66A0094936A /* OpenALManager.m in Sources */,
 				6584D2B218ECA66A0094936A /* IOSVersion.m in Sources */,
 				6584D16718ECA6630094936A /* CCDirector.m in Sources */,
+				6548FB091935264B00ADA44E /* LoginViewController.m in Sources */,
 				6584D2D218ECA66B0094936A /* CCScrollView.m in Sources */,
 				6584D1C518ECA6650094936A /* CCResponder.m in Sources */,
 				6584D15C18ECA6630094936A /* CCClippingNode.m in Sources */,
@@ -2025,6 +2044,7 @@
 				6584D1B918ECA6650094936A /* CCPhysicsShape.m in Sources */,
 				6584D1C118ECA6650094936A /* CCRenderTexture.m in Sources */,
 				6584D14718ECA6630094936A /* CCActionManager.m in Sources */,
+				6548FB0E1935360D00ADA44E /* SignupViewController.m in Sources */,
 				6584D1EB18ECA6660094936A /* CCSprite9Slice.m in Sources */,
 				6584D1FD18ECA6670094936A /* CCTextureAtlas.m in Sources */,
 				6584D2BE18ECA66A0094936A /* OALAudioFile.m in Sources */,

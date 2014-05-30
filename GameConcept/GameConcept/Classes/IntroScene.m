@@ -18,6 +18,8 @@
 #import "PlayerSingleton.h"
 #import "LeaderBoardDB.h"
 #import "PublishedViewController.h"
+#import "LoginViewController.h"
+#import "SignupViewController.h"
 
 // -----------------------------------------------------------------------
 #pragma mark - IntroScene
@@ -49,7 +51,10 @@
     self = [super init];
     if (!self) return(nil);
     
+    PFUser *currentUser = [PFUser currentUser];
+    
     [PlayerSingleton CreateInstance];
+    
     [LeaderBoardDB CreateInstance];
     
     
@@ -101,56 +106,79 @@
     label.position = ccp(0.5f, 0.90f); // Upper - Middle of screen
     [self addChild:label];
 
-    userNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(142, 65, 200, 30)];
-    [userNameTextField setDelegate:self];
-    [userNameTextField setText:@""];
-    [[[CCDirector sharedDirector] view] addSubview:userNameTextField];
-    
-    [userNameTextField becomeFirstResponder];
-    userNameTextField.returnKeyType = UIReturnKeyDone;
-    userNameTextField.placeholder = @"Enter User Name";
-    userNameTextField.borderStyle = UITextBorderStyleRoundedRect;
+//    userNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(142, 65, 200, 30)];
+//    [userNameTextField setDelegate:self];
+//    [userNameTextField setText:@""];
+//    [[[CCDirector sharedDirector] view] addSubview:userNameTextField];
+//    
+//    [userNameTextField becomeFirstResponder];
+//    userNameTextField.returnKeyType = UIReturnKeyDone;
+//    userNameTextField.placeholder = @"Enter User Name";
+//    userNameTextField.borderStyle = UITextBorderStyleRoundedRect;
     
     
     
     // Helloworld scene button
     CCButton *helloWorldButton = [CCButton buttonWithTitle:@"[ Save the Bubbles ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     helloWorldButton.positionType = CCPositionTypeNormalized;
-    helloWorldButton.position = ccp(0.5f, 0.65f);
+    helloWorldButton.position = ccp(0.5f, 0.80f);
     [helloWorldButton setTarget:self selector:@selector(onGameStartClicked:)];
     [self addChild:helloWorldButton];
 
     // Credits scene button
     CCButton *creditsButton = [CCButton buttonWithTitle:@"[ Game Credits ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     creditsButton.positionType = CCPositionTypeNormalized;
-    creditsButton.position = ccp(0.5f, 0.53f);
+    creditsButton.position = ccp(0.5f, 0.68f);
     [creditsButton setTarget:self selector:@selector(onCreditsClicked:)];
     [self addChild:creditsButton];
     
     // Instructions scene button
     CCButton *instructionsButton = [CCButton buttonWithTitle:@"[ Instructions ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     instructionsButton.positionType = CCPositionTypeNormalized;
-    instructionsButton.position = ccp(0.5f, 0.41f);
+    instructionsButton.position = ccp(0.5f, 0.56f);
     [instructionsButton setTarget:self selector:@selector(onInstructionsClicked:)];
     [self addChild:instructionsButton];
     
     // Internal Leader Board scene button
-    CCButton *internalLeaderBoardButton = [CCButton buttonWithTitle:@"[ Internal Leaderboard  ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    CCButton *internalLeaderBoardButton = [CCButton buttonWithTitle:@"[ Internal Leaderboard ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     internalLeaderBoardButton.positionType = CCPositionTypeNormalized;
-    internalLeaderBoardButton.position = ccp(0.5f, 0.29f);
+    internalLeaderBoardButton.position = ccp(0.5f, 0.44f);
     [internalLeaderBoardButton setTarget:self selector:@selector(onInternalLeaderBoardClicked:)];
     [self addChild:internalLeaderBoardButton];
     
-    // Internal Leader Board scene button
-    CCButton *publishedLeaderBoardButton = [CCButton buttonWithTitle:@"[ Published Leaderboard  ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    // Published Leader Board scene button
+    CCButton *publishedLeaderBoardButton = [CCButton buttonWithTitle:@"[ Published Leaderboard ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
     publishedLeaderBoardButton.positionType = CCPositionTypeNormalized;
-    publishedLeaderBoardButton.position = ccp(0.5f, 0.17f);
+    publishedLeaderBoardButton.position = ccp(0.5f, 0.32f);
     [publishedLeaderBoardButton setTarget:self selector:@selector(onPublishedLeaderBoardClicked:)];
     [self addChild:publishedLeaderBoardButton];
+    
+    // Login scene button
+    CCButton *loginButton = [CCButton buttonWithTitle:@"[ Login ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    loginButton.positionType = CCPositionTypeNormalized;
+    loginButton.position = ccp(0.5f, 0.20f);
+    [loginButton setTarget:self selector:@selector(onLoginClicked:)];
+    [self addChild:loginButton];
+    
+    // Create Account scene button
+    CCButton *creatAccountButton = [CCButton buttonWithTitle:@"[ Create Account ]" fontName:@"Verdana-Bold" fontSize:18.0f * fontMultiplier];
+    creatAccountButton.positionType = CCPositionTypeNormalized;
+    creatAccountButton.position = ccp(0.5f, 0.08f);
+    [creatAccountButton setTarget:self selector:@selector(onCreateAccountClicked:)];
+    [self addChild:creatAccountButton];
 
     
     // done
     
+    // Check to see if there is a currently logged in player. If not, disable the 'Save the Bubbles' button.
+    if (!currentUser) {
+        helloWorldButton.opacity = 0.50f;
+        helloWorldButton.userInteractionEnabled = NO;
+    } else {
+        PlayerSingleton *playerSingleton = [PlayerSingleton GetInstance];
+        playerSingleton.playerName = currentUser.username;
+        NSLog(@"%@", currentUser.username);
+    }
     
 	return self;
 }
@@ -205,6 +233,27 @@
     // start Internal Leaderboard scene with transition
     PublishedViewController *publishedViewController = [[PublishedViewController alloc] init];
     [[CCDirector sharedDirector] presentViewController:publishedViewController animated:YES completion:nil];
+    
+    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+}
+
+- (void)onLoginClicked:(id)sender
+{
+    //    userNameTextField.hidden = YES;
+    
+    // start Login scene with transition
+    LoginViewController *loginViewController = [[LoginViewController alloc] init];
+    [[CCDirector sharedDirector] presentViewController:loginViewController animated:YES completion:nil];
+    
+    [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+}
+
+- (void)onCreateAccountClicked:(id)sender
+{
+    
+    // start Create Account scene with transition
+    SignupViewController *signupViewController = [[SignupViewController alloc] init];
+    [[CCDirector sharedDirector] presentViewController:signupViewController animated:YES completion:nil];
     
     [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
 }

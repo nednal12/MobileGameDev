@@ -64,4 +64,9 @@
 	return [IntroScene scene];
 }
 
+
+- (void) applicationWillTerminate:(UIApplication *)application
+{
+    [PFUser logOut];
+}
 @end

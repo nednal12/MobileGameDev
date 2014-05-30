@@ -72,6 +72,16 @@
     CCAction *showLargeBubble;
     
     int successBubbleLimit;
+    
+    BOOL negAchievement;
+    BOOL comAchievement;
+    BOOL meaAchievement;
+    int incAchievement;
+    
+    int successfulWOIntervention;
+    BOOL awardComAchievement;
+    BOOL awardMeaAchievement;
+    
 }
 
 // -----------------------------------------------------------------------
@@ -91,7 +101,24 @@
     self = [super init];
     if (!self) return(nil);
     
-    successBubbleLimit = 2;
+    successBubbleLimit = 5;
+    awardComAchievement = FALSE;
+    awardMeaAchievement = FALSE;
+    
+    
+    // The player information needs to be retrieved here every time the level is played in order to keep the player data in-sync with the Parse backend service. Otherwise, some very frustrating bugs occur and they take forever to figure out.
+    PFUser *currentUser = [PFUser currentUser];
+    PFQuery *query = [PFUser query];
+    PFObject *object = currentUser;
+    [query getObjectInBackgroundWithId:object.objectId block:^(PFObject *player, NSError *error) {
+        
+        negAchievement = [player[@"negAchievement"] boolValue];
+        comAchievement = [player[@"comAchievement"] boolValue];
+        meaAchievement = [player[@"meaAchievement"] boolValue];
+        incAchievement = [player[@"incAchievement"] intValue];
+        NSLog(@"The value for negAchievement is: %tu", negAchievement);
+        
+    }];
     
     // Set the fontMultiplier so that fonts are sized appropriately regardless of whether they are displayed on a Retina iPhone or iPad
     CGSize whichSize = [CCDirector sharedDirector].viewSize;
@@ -313,12 +340,14 @@
             largeBubble.physicsBody.collisionGroup = @"enemyGroup";
             largeBubble.physicsBody.collisionType = @"";
             [largeBubble setVisible:NO];
+            successfulWOIntervention = 0;
             [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         } else if (CGRectContainsPoint(smallBubble.boundingBox, tappedSpot)){
             
             smallBubble.physicsBody.collisionGroup = @"enemyGroup";
             smallBubble.physicsBody.collisionType = @"";
             [smallBubble setVisible:NO];
+            successfulWOIntervention = 0;
             [[OALSimpleAudio sharedInstance] playBuffer:bubblePopSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
         } else if (CGRectContainsPoint(pauseButton.boundingBox, tappedSpot)){
             if ([[CCDirector sharedDirector] isPaused] ) {
@@ -606,7 +635,7 @@
         [self addChild:failureLabel z:2];
         
         
-        // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than 10
+        // Call endTheGameFail if deadBubbles reaches zero and successfulBubbles is less than successfulBubbleLimit
 
         if (deadBubbles <= 0 && successfulBubbles < successBubbleLimit) {
             [self endTheGameFail];
@@ -616,6 +645,13 @@
     } else if (largeBubble.position.y > self.contentSize.height && largeBubble.visible == TRUE){
         [self removeChild:successfulLabel];
         successfulBubbles++;
+        successfulWOIntervention++;
+        if (successfulWOIntervention == 5) {
+            awardComAchievement = TRUE;
+        }
+        if (successfulBubbles == 10 && deadBubbles == 5) {
+            awardMeaAchievement = TRUE;
+        }
         NSString *tempString = [NSString stringWithFormat:@"%d / 10", successfulBubbles];
         successfulLabel = [CCLabelTTF labelWithString:tempString fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
         successfulLabel.positionType = CCPositionTypeNormalized;
@@ -634,6 +670,13 @@
     } else if (smallBubble.position.y > self.contentSize.height && smallBubble.visible == TRUE){
         [self removeChild:successfulLabel];
         successfulBubbles++;
+        successfulWOIntervention++;
+        if (successfulWOIntervention == 5) {
+            awardComAchievement = TRUE;
+        }
+        if (successfulBubbles == 10 && deadBubbles == 5) {
+            awardMeaAchievement = TRUE;
+        }
         NSString *tempString = [NSString stringWithFormat:@"%d / 10", successfulBubbles];
         successfulLabel = [CCLabelTTF labelWithString:tempString fontName:@"Verdana-Bold" fontSize:12.0f * fontMultiplier];
         successfulLabel.positionType = CCPositionTypeNormalized;
@@ -675,6 +718,31 @@
     // Play a sorrowful tuba cadence
     [[OALSimpleAudio sharedInstance] playBuffer:tubaSadSound volume:1.0 pitch:1.0 pan:0.0 loop:NO];
     
+    // Award the player the Negative Achievement for not getting 5 bubbles to the top
+    if (!negAchievement) {
+    
+        // Retrieve the object by id
+        PFUser *currentUser = [PFUser currentUser];
+        PFQuery *query = [PFUser query];
+        PFObject *object = currentUser;
+        [query getObjectInBackgroundWithId:object.objectId block:^(PFObject *player, NSError *error) {
+            
+            player[@"negAchievement"] = @YES;
+            
+            // [agents saveInBackground];
+            [player saveEventually];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message: @"You've been awarded the Negative Achievement for your inability to get 5 bubbles to the top." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            
+            [alertView show];
+            
+        }];
+    
+    }
+
+    
+    
+    
     // Remove all the sprites and unshedule all of the schedulers
     [largeBubble removeFromParent];
     [smallBomb removeFromParent];
@@ -701,6 +769,72 @@
 {
     // Pleay a triumphant trumpet cadence
     [[OALSimpleAudio sharedInstance] playBuffer:trumpetFanfare volume:1.0 pitch:1.0 pan:0.0 loop:NO];
+    
+    // Award the player the Incrmental Achievement. Player earns this every time he/she exceeds a new 10 bubble threshold.
+    // Use the floor function to determine which threshold divisable by 10 was surpassed
+    int tempInt = 10 * floor((successfulBubbles / 10)+0.5);
+    
+    if ((incAchievement * 10) < tempInt) {
+        
+        int tempIncAchievement = successfulBubbles / 10;
+        NSNumber *intTemp = [[NSNumber alloc] initWithInteger:tempIncAchievement];
+        // Retrieve the object by id
+        PFUser *currentUser = [PFUser currentUser];
+        PFQuery *query = [PFUser query];
+        PFObject *object = currentUser;
+        [query getObjectInBackgroundWithId:object.objectId block:^(PFObject *player, NSError *error) {
+            
+            player[@"incAchievement"] = intTemp;
+            
+            // [agents saveInBackground];
+            [player saveEventually];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message: [NSString stringWithFormat: @"You've been awarded the Incremental Achievement for your ability to get at least %d bubbles to the top.", tempInt] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            
+            [alertView show];
+            
+        }];
+    }
+    
+    if (awardComAchievement == TRUE && comAchievement == FALSE) {
+        
+        // Retrieve the object by id
+        PFUser *currentUser = [PFUser currentUser];
+        PFQuery *query = [PFUser query];
+        PFObject *object = currentUser;
+        [query getObjectInBackgroundWithId:object.objectId block:^(PFObject *player, NSError *error) {
+            
+            player[@"comAchievement"] = @YES;
+            
+            // [agents saveInBackground];
+            [player saveEventually];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You've been awarded the Completion Achievement for your ability to get at least 5 bubbles to the top without manually popping any." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            
+            [alertView show];
+            
+        }];
+    }
+
+    if (awardMeaAchievement == TRUE && meaAchievement == FALSE) {
+        
+        // Retrieve the object by id
+        PFUser *currentUser = [PFUser currentUser];
+        PFQuery *query = [PFUser query];
+        PFObject *object = currentUser;
+        [query getObjectInBackgroundWithId:object.objectId block:^(PFObject *player, NSError *error) {
+            
+            player[@"meaAchievement"] = @YES;
+            
+            // [agents saveInBackground];
+            [player saveEventually];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You've been awarded the Measurement Achievement for your ability to get 10 bubbles to the top without having any popped." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            
+            [alertView show];
+            
+        }];
+    }
     
     // Remove all the sprites and unshedule all of the schedulers
     [largeBubble removeFromParent];
@@ -738,6 +872,7 @@
     
     PFObject *leaderBoardData = [PFObject objectWithClassName:@"LeaderBoardData"];
     leaderBoardData[@"userName"] = playerSingleton.playerName;
+//    leaderBoardData[@"userName"] = [[PFUser currentUser].username];
     leaderBoardData[@"score"] = [NSNumber numberWithInt:successfulBubbles];
     leaderBoardData[@"gameDate"] = convertedDate;
     [leaderBoardData saveInBackground];
@@ -796,6 +931,7 @@
     return NO;
 }
 
-//-(UIPanGestureRecognizer *)swipeGesture:(SEL)selector
+
+
 
 @end

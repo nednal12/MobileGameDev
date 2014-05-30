@@ -9,7 +9,7 @@
 #import "LeaderBoardDB.h"
 #import "PlayerSingleton.h"
 
-#define sqlFileName @"leaderBoard.sqlDB"
+#define sqlFileName @"internalLeaderBoard.sqlDB"
 
 @implementation LeaderBoardDB
 

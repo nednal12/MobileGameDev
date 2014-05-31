@@ -18,6 +18,8 @@
 		654A891E18EDD49300378456 /* explosion3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 654A891D18EDD49200378456 /* explosion3.mp3 */; };
 		654A8BE618EE0D0A00378456 /* bubbleBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE418EE0D0A00378456 /* bubbleBackground.png */; };
 		654A8BE718EE0D0A00378456 /* bubblePop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 654A8BE518EE0D0A00378456 /* bubblePop.wav */; };
+		655918B01938DFC700F1BE43 /* AchievementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 655918AE1938DFC700F1BE43 /* AchievementsViewController.m */; };
+		655918B11938DFC700F1BE43 /* AchievementsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 655918AF1938DFC700F1BE43 /* AchievementsViewController.xib */; };
 		6567CC1519106B0900BD9643 /* CreditsScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 6567CC1419106B0900BD9643 /* CreditsScene.m */; };
 		6567CC1819106C6700BD9643 /* InstructionsScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 6567CC1719106C6700BD9643 /* InstructionsScene.m */; };
 		65707B1E192CF4D5009CBE6A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6584D0F318ECA6620094936A /* OpenGLES.framework */; };
@@ -306,6 +308,9 @@
 		654A891D18EDD49200378456 /* explosion3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion3.mp3; sourceTree = "<group>"; };
 		654A8BE418EE0D0A00378456 /* bubbleBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleBackground.png; sourceTree = "<group>"; };
 		654A8BE518EE0D0A00378456 /* bubblePop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bubblePop.wav; sourceTree = "<group>"; };
+		655918AD1938DFC700F1BE43 /* AchievementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AchievementsViewController.h; sourceTree = "<group>"; };
+		655918AE1938DFC700F1BE43 /* AchievementsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AchievementsViewController.m; sourceTree = "<group>"; };
+		655918AF1938DFC700F1BE43 /* AchievementsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AchievementsViewController.xib; sourceTree = "<group>"; };
 		6567CC1319106B0900BD9643 /* CreditsScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditsScene.h; sourceTree = "<group>"; };
 		6567CC1419106B0900BD9643 /* CreditsScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditsScene.m; sourceTree = "<group>"; };
 		6567CC1619106C6700BD9643 /* InstructionsScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionsScene.h; sourceTree = "<group>"; };
@@ -1797,6 +1802,9 @@
 				6548FB0B1935360D00ADA44E /* SignupViewController.h */,
 				6548FB0C1935360D00ADA44E /* SignupViewController.m */,
 				6548FB0D1935360D00ADA44E /* SignupViewController.xib */,
+				655918AD1938DFC700F1BE43 /* AchievementsViewController.h */,
+				655918AE1938DFC700F1BE43 /* AchievementsViewController.m */,
+				655918AF1938DFC700F1BE43 /* AchievementsViewController.xib */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1895,6 +1903,7 @@
 				657A2B231911CBDF00701809 /* Icon-76.png in Resources */,
 				65F73535192265F200B9B25B /* lightningBolt.png in Resources */,
 				65D7100F192ED12A00524345 /* userNameTextField-hd.png in Resources */,
+				655918B11938DFC700F1BE43 /* AchievementsViewController.xib in Resources */,
 				6584D3B518ECEE740094936A /* Default.png in Resources */,
 				65A6CF9119008DB0008B3A94 /* background-hd.png in Resources */,
 				6584D11218ECA6620094936A /* Original_Default-Landscape~ipad.png in Resources */,
@@ -1980,6 +1989,7 @@
 				6584D23F18ECA6680094936A /* CCFileUtils.m in Sources */,
 				6584D2C218ECA66A0094936A /* OALTools.m in Sources */,
 				6584D17818ECA6640094936A /* ccGLStateCache.m in Sources */,
+				655918B01938DFC700F1BE43 /* AchievementsViewController.m in Sources */,
 				6584D27018ECA6690094936A /* OALActionManager.m in Sources */,
 				6584D1CF18ECA6660094936A /* CCScheduler.m in Sources */,
 				6584D1A318ECA6650094936A /* CCParticleExamples.m in Sources */,

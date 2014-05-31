@@ -9,6 +9,7 @@
 #import "PublishedViewController.h"
 #import <Parse/Parse.h>
 #import "IntroScene.h"
+#import "AchievementsViewController.h"
 
 
 @interface PublishedViewController ()
@@ -105,6 +106,21 @@
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", [rowData objectForKey:@"score"]];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AchievementsViewController *achievementsViewController = [[AchievementsViewController alloc] initWithNibName:@"AchievementsViewController" bundle:nil];
+    UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    achievementsViewController.playerNameString = [[NSString alloc] initWithString: [selectedCell textLabel].text];
+    
+    if (achievementsViewController != nil)
+    {
+        
+        [self presentViewController:achievementsViewController animated:TRUE completion:nil];
+    }
+    
 }
 
 
